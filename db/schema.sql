@@ -27,9 +27,9 @@ CREATE TABLE employee (
     department_name VARCHAR(30) NOT NULL,
     salary DECIMAL(15) NOT NULL,
     role_id INT NOT NULL,
-    manager_id INT NOT NULL,
-    FOREIGN KEY (role_id) REFERENCES role(id) ON DELETE SET NULL
-    FOREIGN KEY (salary) REFERENCES role(salary) ON DELETE SET NULL
-    FOREIGN KEY (department_name) REFERENCES department(name) ON DELETE SET NULL
+    manager_name VARCHAR(30) NOT NULL,
+    FOREIGN KEY (role_id) REFERENCES role(id) ON DELETE SET NULL,
+    FOREIGN KEY (salary) REFERENCES role(salary) ON DELETE SET NULL,
+    FOREIGN KEY (department_name) REFERENCES department(name) ON DELETE SET NULL,
     FOREIGN KEY (job_title) REFERENCES role(job_title) ON DELETE SET NULL
 );
