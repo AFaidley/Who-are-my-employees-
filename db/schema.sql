@@ -7,15 +7,16 @@ CREATE DATABASE employee_db;
 USE employee_db;
 
 CREATE TABLE department (
-  id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-  name VARCHAR(30) NOT NULL
+  id INT AUTO_INCREMENT,
+  name VARCHAR(30) NOT NULL,
+  PRIMARY KEY (id)
 );
 
 CREATE TABLE role (
     id INT AUTO_INCREMENT PRIMARY KEY,
     job_title VARCHAR(30) NOT NULL,
     salary DECIMAL(15) NOT NULL,
-    department_id INT NOT NULL,
+    department_id INT,
     FOREIGN KEY (department_id) REFERENCES department(id) ON DELETE SET NULL
 ); 
 
@@ -26,10 +27,7 @@ CREATE TABLE employee (
     job_title VARCHAR(30) NOT NULL,
     department_name VARCHAR(30) NOT NULL,
     salary DECIMAL(15) NOT NULL,
-    role_id INT NOT NULL,
+    role_id INT,
     manager_name VARCHAR(30) NOT NULL,
-    FOREIGN KEY (role_id) REFERENCES role(id) ON DELETE SET NULL,
-    FOREIGN KEY (salary) REFERENCES role(salary) ON DELETE SET NULL,
-    FOREIGN KEY (department_name) REFERENCES department(name) ON DELETE SET NULL,
-    FOREIGN KEY (job_title) REFERENCES role(job_title) ON DELETE SET NULL
+    FOREIGN KEY (role_id) REFERENCES role(id) ON DELETE SET NULL
 );

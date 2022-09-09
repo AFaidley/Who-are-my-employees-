@@ -13,6 +13,7 @@ const db = mysql.createConnection(
     console.log(`You're connected to the employee_db database! :)`)
 );
 
+// Options for user to choose from- may add more
 const userChoices = {
   type: 'list',
   name: 'choices',
@@ -61,6 +62,7 @@ function questions ()  {
   }
 };
 
+// View department func
 function viewAllDepartments() {
   const query = `SELECT * FROM department`;
   db.query(query, (err, res) => {
@@ -73,6 +75,7 @@ function viewAllDepartments() {
   });
 };
 
+// View roles func
 function viewAllRoles() {
   const query = `SELECT * FROM role`;
   db.query(query, (err, res) => {
@@ -85,6 +88,7 @@ function viewAllRoles() {
   });
 };
 
+// View all employees func
 function viewAllEmployees() {
   const query = `SELECT * FROM employee`;
   db.query(query, (err, res) => {
@@ -96,3 +100,41 @@ function viewAllEmployees() {
       questions();
   });
 };
+
+async function addADepartment() {
+  console.log('\n');
+  console.log('ADDING DEPARTMENT');
+
+  // Asynchronous operation to prompt and wait for user input
+  const addingDepartment = await inquirer.prompt(askDepartment());
+  const addResName =addingDepartment.name;
+      
+  const query = `INSERT INTO department (name) VALUES (${addResName})`;
+
+  // Insert dept name info into dept table
+  db.query(
+      'INSERT INTO department SET ?',
+      {
+          name: addResName
+      },
+      (err, res) => {
+          if (err) throw err;
+          init();
+      }
+  );
+  
+  console.log('\n');
+  console.log('DEPARTMENT ADDED');
+  console.log('\n');
+};
+
+// Func to ask user for dept name- prompt from above
+function askDepartment() {
+  return ([
+      {
+          name: "department name",
+          type: "input",
+          message: "Enter the department name you wish to add: "
+      }
+  ]);
+}
