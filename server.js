@@ -14,11 +14,12 @@ const db = mysql.createConnection(
 );
 
 // Options for user to choose from- may add more
-const userChoices = {
-  type: 'list',
-  name: 'choices',
-  message: 'What would you like to do?',
-  choices: [
+function questions ()  {
+  inquirer.prompt({
+    type: 'list',
+    name: 'choices',
+    message: 'What would you like to do?',
+    choices: [
       'View All Departments',
       'View All Roles',
       'View All Employees',
@@ -27,13 +28,9 @@ const userChoices = {
       'Add an Employee',
       'Update an Employee',
       'Quit'
-  ]
-};
-
-function questions ()  {
-  let chosen = inquirer.prompt(userChoices);
-
-  switch (chosen.userChoices) {
+    ]
+  }).then(userChoice => {
+  switch (userChoice.choices) {
       case 'View All Departments':
           viewAllDepartments();
           break;
@@ -60,6 +57,7 @@ function questions ()  {
       default:
           break;
   }
+})
 };
 
 // View department func
@@ -113,16 +111,16 @@ async function addADepartment() {
 
   // Insert dept name info into dept table
   db.query(
-      'INSERT INTO department SET ?',
+      `INSERT INTO department SET ?`,
       {
           name: addResName
       },
       (err, res) => {
           if (err) throw err;
-          init();
+          questions();
       }
   );
-  
+
   console.log('\n');
   console.log('DEPARTMENT ADDED');
   console.log('\n');
@@ -138,3 +136,77 @@ function askDepartment() {
       }
   ]);
 }
+
+async function addARole() {
+  console.log('\n');
+  console.log('ADDING ROLE');
+  console.log('\n');
+  // Asynchronous operation to prompt and wait for user input about role and salary
+  const addingRole = await inquirer.prompt(askRole());
+  const addingSalary = await inquirer.prompt(askSalary());
+
+  db.query(`SELECT * FROM department;`, async (err, res) => {
+      if (err) throw err;
+      const { department } = await inquirer.prompt([
+          {
+              name: 'department',
+              type: 'list',
+              choices: () => res.map(res => res.name),
+              message: 'What department is this role in: '
+          }
+      ]);
+
+      // Set role dept, using user input
+      let deptId;
+      for (const row of res) {
+          if (row.name === department) {
+              deptId = row.id;
+              continue;
+          }
+      }
+      console.log(deptId);
+      console.log(addingRole.role);
+      console.log(addingSalary.salary);
+
+      // Add input for new role into the role table and console log once done
+      db.query(
+          'INSERT INTO role SET ?',
+          {
+              job_title: addingRole.role,
+              salary: addingSalary.salary,
+              department_id: deptId
+          },
+          (err, res) => {
+              if (err) throw err;
+              console.log('\n');
+              console.log('EMPLOYEE ADDED');
+              console.log('\n');
+              questions();
+          }
+      );
+  });
+};
+
+// Func to ask for role
+function askRole() {
+  return ([
+      {
+          name: "role",
+          type: "input",
+          message: "Enter the job title for the new role: "
+      }
+  ]);
+}
+// Func to ask for salary
+function askSalary() {
+  return ([
+      {
+          name: "salary",
+          type: "input",
+          message: "Enter the salary for the new role:"
+      }
+  ]);
+}
+
+// Calling func to start app
+questions();
