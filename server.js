@@ -84,3 +84,15 @@ function viewAllRoles() {
       questions();
   });
 };
+
+function viewAllEmployees() {
+  const query = `SELECT * FROM employee`;
+  db.query(query, (err, res) => {
+      if (err) throw err;
+      console.log('\n');
+      console.log('VIEW ALL EMPLOYEES');
+      console.log('\n');
+      console.table(res);
+      questions();
+  });
+};
