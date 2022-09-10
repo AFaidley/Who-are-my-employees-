@@ -25,7 +25,7 @@ CREATE TABLE employee (
     first_name VARCHAR(30) NOT NULL,
     last_name VARCHAR(30) NOT NULL,
     job_title VARCHAR(30) NOT NULL,
-    department_name VARCHAR(30) NOT NULL,
+    department_name VARCHAR(30),
     salary DECIMAL(15) NOT NULL,
     role_id INT,
     manager_name VARCHAR(30) NOT NULL,
