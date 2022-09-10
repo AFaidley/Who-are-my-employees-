@@ -222,6 +222,8 @@ async function addAnEmployee() {
   const addingManName = await inquirer.prompt(askManName());
   const addingRole = await inquirer.prompt(askRole());
   const addingSalary = await inquirer.prompt(askSalary());
+  const addingDeptName = await inquirer.prompt(askDeptName());
+  const addingRoleId = await inquirer.prompt(askRoleId());
 
   db.query(`SELECT * FROM employee;`, async (err, res) => {
     if (err) throw err;
@@ -231,6 +233,8 @@ async function addAnEmployee() {
     console.log(addingRole.role);
     console.log(addingSalary.salary);
     console.log(addingManName.managers_name);
+    console.log(addingDeptName.dept_name);
+    console.log(addingRoleId.roleId);
 
     // Inserting user input into employee table
     db.query(
@@ -241,6 +245,8 @@ async function addAnEmployee() {
         job_title: addingRole.role,
         salary: addingSalary.salary,
         manager_name: addingManName.managers_name,
+        department_name: addingDeptName.dept_name,
+        role_id: addingRoleId.roleId,
       },
       (err, res) => {
         if (err) throw err;
@@ -278,6 +284,101 @@ function askManName() {
       message: 'Enter full name for the manager of the new employee: ',
     },
   ];
+}
+
+// Ask for dept name- prompt
+function askDeptName() {
+  return [
+    {
+      name: 'dept_name',
+      type: 'input',
+      message: 'Enter the name of the department that the new employee will be a part of: '
+    },
+  ];
+}
+
+// Ask for role ID - prompt
+function askRoleId() {
+  return [
+    {
+      name: 'roleId',
+      type: 'input',
+      message: 'Enter the role ID of the new employee: '
+    },
+  ];
+}
+
+function updateAnEmployee() {
+  db.query(
+    `SELECT employee.first_name, employee.last_name, employee.role_id, employee.job_title FROM employee;`,
+    (err, res) => {
+      if (err) {
+        console.log(err);
+      }
+      let employees = res;
+      db.query(`SELECT job_title FROM role;`, (err, res) => {
+        if (err) {
+          console.log(err);
+        }
+        let currentRoles = res;
+
+        inquirer
+          .prompt([
+            {
+              // Choose employee to update
+              type: 'list',
+              message: 'Please choose an employee to update:',
+              name: 'employee',
+              choices: () => {
+                let employee = [];
+                for (let i = 0; i < employees.length; i++) {
+                  let currentId = i + 1;
+                  let firstI = employees[i].first_name;
+                  let lastI = employees[i].last_name;
+                  let currentRoleID = employees[i].role_id;
+                  let title = employees[i].job_title;
+                  employee.push(
+                    `${currentId}: ${firstI} ${lastI} - current role is #${currentRoleID} and job title is ${title}`
+                  );
+                }
+                return employee;
+              },
+            },
+            {
+              // User choice for new role for updated employee
+              type: 'list',
+              message: 'Please choose their new role',
+              name: 'newRole',
+              choices: () => {
+                let role = [];
+                for (let i = 0; i < currentRoles.length; i++) {
+                  const currentId = i + 1;
+                  let currentTitle = currentRoles[i].job_title;
+                  role.push(`${currentId}:${currentTitle}`);
+                }
+                console.log(role);
+                return role;
+              },
+            },
+          ])
+          // Dynamically getting the id for the user, role and job title for the selected user
+          .then(function (res) {
+            let id = parseInt(res.employee.split(':')[0]);
+            let newRole = parseInt(res.newRole.split(':')[0]);
+            let newTitle = res.newRole.split(':')[1];
+            const sqlQuery = `UPDATE employee SET role_id = ${newRole}, job_title = '${newTitle}' WHERE id = ${id}`;
+            db.query(sqlQuery, (err, result) => {
+              if (err) {
+                console.log(err);
+                return;
+              }
+              // Shows updated list
+              viewAllEmployees();
+            });
+          });
+      });
+    }
+  );
 }
 
 // Calling func to start app
