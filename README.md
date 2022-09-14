@@ -21,10 +21,11 @@ Below is a link to my demo video:
 - Node
 - Inquirer
 - MySQL
+- Console.table
 ## Installation
-The user would need to install Node, the following link describes how to do so: https://nodejs.dev/en/learn/how-to-install-nodejs <br> After installing Node they will then have to install the required packages and they can do so by using the command "npm i" in the terminal.
+The user would need to install Node, the following link describes how to do so: https://nodejs.dev/en/learn/how-to-install-nodejs <br> After installing Node they will then have to install the required packages and they can do so by using the command `npm i` in the terminal.
 ## Usage
-After completing the installation instructions, the user will need to open the terminal from the db file, and login to MySQL with 'mysql -u root -p'. Once logged in the user will need to run 'SOURCE schema.sql' and then run 'SOURCE seeds.sql', after this the user will need to run 'quit' to exit MySQL. They will then need to run 'npm start' upon which the application will start running and they will be presented with prompts to interact with the database. Once they have completed using the application they will scroll to the quit prompt and will exit the application.
+After completing the installation instructions, the user will need to open the terminal from the db file, and login to MySQL with `mysql -u root -p`. Once logged in the user will need to run `SOURCE schema.sql` and then run `SOURCE seeds.sql`, after this the user will need to run `quit` to exit MySQL. They will then need to run `npm start` upon which the application will start running and they will be presented with prompts to interact with the database. Once they have completed using the application they will scroll to the quit prompt and will exit the application.
 Thank you so much for using my app!
 ## Contribution
 - Denver University Staff
