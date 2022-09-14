@@ -55,6 +55,7 @@ function questions() {
           updateAnEmployee();
           break;
         case 'Quit':
+          console.log('Thank you for using my app! Bye!')
           process.exit();
         default:
           break;
@@ -183,7 +184,7 @@ async function addARole() {
       (err, res) => {
         if (err) throw err;
         console.log('\n');
-        console.log('EMPLOYEE ADDED');
+        console.log('ROLE ADDED');
         console.log('\n');
         questions();
       }
